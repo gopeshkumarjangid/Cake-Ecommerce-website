@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - Sweet Bites</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-r from-pink-50 to-yellow-50 font-sans">
+
+  <!-- Mobile Navbar -->
+  <div class="lg:hidden flex items-center justify-between p-4 bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+    <h1 class="text-xl font-bold text-pink-600">Sweet Bites</h1>
+    <div class="flex items-center gap-3">
+      <a href="/cart" class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600">🛒 Cart</a>
+      <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"
+        class="p-2 rounded-md bg-pink-500 text-white">☰</button>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar"
+    class="w-64 bg-white shadow-lg p-6 flex flex-col justify-between fixed top-0 left-0 h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-50">
+    <div>
+      <div class="hidden lg:flex items-center space-x-2 mb-6">
+        <img src="https://cdn-icons-png.flaticon.com/512/2769/2769603.png" alt="Cake Logo" class="w-10 h-10">
+        <h1 class="text-2xl font-bold text-pink-600">Sweet Bites</h1>
+      </div>
+      <h2 class="text-xl font-bold text-pink-600 mb-4">Menu</h2>
+      <nav class="space-y-2">
+        <a href="/shop" class="block text-gray-700 hover:text-pink-600">Shop</a>
+        <a href="/cart" class="block text-pink-600 font-semibold">Your Cart</a>
+        <a href="/users/logout" class="block text-red-500 hover:text-red-600">Logout</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="lg:ml-64 p-6 pt-20 lg:pt-6">
+    <h2 class="text-2xl font-bold text-pink-600 mb-6">🛒 Your Cart</h2>
+
+    <% if (products && products.length > 0) { %>
+    <!-- Cart Table -->
+    <div class="bg-white shadow-lg rounded-xl p-4 overflow-x-auto">
+      <table class="w-full text-left text-sm sm:text-base">
+        <thead>
+          <tr class="border-b">
+            <th class="py-3">Product</th>
+            <th class="py-3">Price</th>
+            <th class="py-3">Quantity</th>
+            <th class="py-3">Total</th>
+            <th class="py-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% let grandTotal = 0; %>
+          <% products.forEach(function(product, index){ 
+               const pct = Number(product.discount) || 0; 
+               const price = Number(product.price) || 0; 
+               const discounted = Math.round(price - (price * pct / 100)); 
+               grandTotal += discounted; 
+          %>
+          <tr class="border-b">
+            <!-- Product -->
+            <td class="py-4 flex items-center gap-3">
+              <img src="<%= product.image %>" alt="<%= product.name %>"
+                class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg shadow" />
+              <span class="font-semibold"><%= product.name %></span>
+            </td>
+
+            <!-- Price -->
+            <td class="py-4 text-pink-600 font-bold">₹<%= discounted %></td>
+
+            <!-- Quantity -->
+            <td class="py-4">
+              <div class="flex items-center gap-2">
+                <button onclick="updateQty(<%= index %>, -1, <%= discounted %>)"
+                  class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">-</button>
+                <span id="qty-<%= index %>" class="min-w-[20px] text-center">1</span>
+                <button onclick="updateQty(<%= index %>, 1, <%= discounted %>)"
+                  class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">+</button>
+              </div>
+            </td>
+
+            <!-- Total -->
+            <td class="py-4 font-semibold" id="total-<%= index %>">₹<%= discounted %></td>
+
+            <!-- Remove -->
+            <td class="py-4">
+              <a href="/removefromcart/<%= product._id %>" class="text-red-500 hover:underline">Remove</a>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Summary -->
+    <div class="mt-6 bg-white shadow-lg rounded-xl p-6 max-w-md ml-auto">
+      <h3 class="text-xl font-bold mb-4">Order Summary</h3>
+      <div class="flex justify-between mb-2">
+        <span>Subtotal</span>
+        <span id="grand-total">₹<%= grandTotal %></span>
+      </div>
+      <div class="flex justify-between mb-2">
+        <span>Shipping</span>
+        <span class="text-green-600">Free</span>
+      </div>
+      <div class="border-t pt-2 flex justify-between font-bold text-lg">
+        <span>Total</span>
+        <span id="grand-total-final">₹<%= grandTotal %></span>
+      </div>
+      <a href="upi://pay?pa=8441806773@ybl&pn=Sweet%20Notes%20Store&am=<%= grandTotal %>&cu=INR"
+   class="mt-4 block bg-pink-600 text-white py-2 px-4 rounded-lg text-center hover:bg-pink-700">
+   Pay
+</a>
+    </div>
+
+    <% } else { %>
+    <!-- Empty Cart -->
+    <div class="text-center py-20">
+      <h3 class="text-xl font-bold text-gray-600">Your cart is empty 😔</h3>
+      <a href="/shop" class="mt-4 inline-block bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600">Go
+        Shopping</a>
+    </div>
+    <% } %>
+  </main>
+
+  <script>
+    function updateQty(index, change, price) {
+      const qtyEl = document.getElementById(`qty-${index}`);
+      const totalEl = document.getElementById(`total-${index}`);
+      const grandTotalEl = document.getElementById("grand-total");
+      const grandTotalFinalEl = document.getElementById("grand-total-final");
+
+      let qty = parseInt(qtyEl.innerText);
+      qty = Math.max(1, qty + change); // never go below 1
+      qtyEl.innerText = qty;
+
+      // Update row total
+      let rowTotal = qty * price;
+      totalEl.innerText = "₹" + rowTotal;
+
+      // Update grand total
+      let allTotals = document.querySelectorAll("[id^='total-']");
+      let grandTotal = 0;
+      allTotals.forEach(el => {
+        grandTotal += parseInt(el.innerText.replace("₹", ""));
+      });
+
+      grandTotalEl.innerText = "₹" + grandTotal;
+      grandTotalFinalEl.innerText = "₹" + grandTotal;
+    }
+  </script>
+</body>
+</html>

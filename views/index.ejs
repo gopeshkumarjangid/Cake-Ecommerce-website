@@ -1,0 +1,115 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cake Shop - Login & Signup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-pink-100 via-pink-50 to-yellow-50 flex items-center justify-center min-h-screen font-sans">
+
+  <div class="bg-white shadow-2xl rounded-3xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Left side: Illustration + Branding -->
+    <div class="hidden md:flex md:w-1/2 bg-gradient-to-b from-pink-200 to-pink-100 items-center justify-center p-6">
+      <div class="text-center space-y-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/2769/2769603.png" alt="Cake" class="w-40 mx-auto drop-shadow-lg">
+        <h1 class="text-3xl font-extrabold text-pink-700">Welcome to Sweet Bites 🎂</h1>
+        <p class="text-gray-600 text-sm">Delicious cakes & bakery items delivered fresh to your doorstep.  
+        Sign up or sign in to start ordering your favorite treats!</p>
+      </div>
+    </div>
+
+    <!-- Right side: Forms -->
+    <div class="w-full md:w-1/2 p-8 bg-white relative">
+
+      <!-- Cake logo top center -->
+      <div class="text-center mb-6">
+        <img src="https://cdn-icons-png.flaticon.com/512/2769/2769603.png" alt="Cake Logo" class="w-16 mx-auto">
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex justify-center mb-6">
+        <button id="signupBtn" onclick="toggleForm('signup')" 
+          class="w-1/2 py-2 text-center font-semibold border-b-2 border-pink-500 text-pink-600">
+          Sign Up
+        </button>
+        <button id="signinBtn" onclick="toggleForm('signin')" 
+          class="w-1/2 py-2 text-center font-semibold border-b-2 border-transparent text-gray-500 hover:text-pink-600">
+          Sign In
+        </button>
+      </div>
+
+      <!-- Signup Form -->
+      <form id="signupForm" action="/users/register" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Full Name</label>
+          <input type="text" name="fullname" required 
+                 class="w-full border rounded-xl px-3 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Email</label>
+          <input type="email" name="email" required 
+                 class="w-full border rounded-xl px-3 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Password</label>
+          <input type="password" name="password" required 
+                 class="w-full border rounded-xl px-3 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <button type="submit" 
+                class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-pink-600 transition">
+          Create Account
+        </button>
+      </form>
+
+      <!-- Signin Form -->
+      <form id="signinForm" action="/users/login" method="POST" class="space-y-4 hidden">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Email</label>
+          <input type="email" name="email" required 
+                 class="w-full border rounded-xl px-3 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Password</label>
+          <input type="password" name="password" required 
+                 class="w-full border rounded-xl px-3 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <button type="submit" 
+                class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-pink-600 transition">
+          Login
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Toggle Script -->
+  <script>
+    function toggleForm(type) {
+      const signupForm = document.getElementById('signupForm');
+      const signinForm = document.getElementById('signinForm');
+      const signupBtn = document.getElementById('signupBtn');
+      const signinBtn = document.getElementById('signinBtn');
+
+      if (type === 'signup') {
+        signupForm.classList.remove('hidden');
+        signinForm.classList.add('hidden');
+        signupBtn.classList.add('border-pink-500','text-pink-600');
+        signupBtn.classList.remove('text-gray-500');
+        signinBtn.classList.remove('border-pink-500','text-pink-600');
+        signinBtn.classList.add('text-gray-500');
+      } else {
+        signupForm.classList.add('hidden');
+        signinForm.classList.remove('hidden');
+        signinBtn.classList.add('border-pink-500','text-pink-600');
+        signinBtn.classList.remove('text-gray-500');
+        signupBtn.classList.remove('border-pink-500','text-pink-600');
+        signupBtn.classList.add('text-gray-500');
+      }
+    }
+  </script>
+</body>
+</html>
