@@ -33,7 +33,7 @@ app.use("/",index);
 
 
 app.get("/", function(req,res){
-    res.render("index");
+    res.redirect("/products/shop");
 });
 
 
