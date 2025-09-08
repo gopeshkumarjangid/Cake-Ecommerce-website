@@ -5,7 +5,7 @@ const productModel = require("../models/product-model");
 const flash = require("connect-flash");
 
 
-router.get('/shop', async function (req, res) {
+router.get('/', async function (req, res) {
   try {
     let products = await productModel.find();
     res.render("shop", { products });   // shop.ejs me products bheje

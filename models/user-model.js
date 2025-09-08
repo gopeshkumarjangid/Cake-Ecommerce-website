@@ -1,18 +1,18 @@
-const mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-    fullname:String,
-    email: String, 
+    fullname: String,
+    email: String,
     password: String,
-    picture: String, 
+    picture: String,
     contact: Number,
-    cart:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"product",
+    cart: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "product"
     }],
-    orders:{
-        type:Array,
-        default:[]
+    orders: {
+        type: Array,
+        default: []
     },
 
 });

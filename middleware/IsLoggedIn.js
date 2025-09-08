@@ -3,8 +3,8 @@ const userModel = require("../models/user-model");
 
 module.exports = async function (req, res, next) {
   if (!req.cookies.token) {
-    req.flash("error", "Please login first");
-    return res.redirect("/");   // ✅ return lagana zaroori hai
+    req.flash("success", "Please login first");
+    return res.redirect("/login");   // ✅ return lagana zaroori hai
   }
 
   try {
@@ -15,14 +15,14 @@ module.exports = async function (req, res, next) {
       .select("-password");
 
     if (!user) {
-      req.flash("error", "User not found, please login again");
-      return res.redirect("/");  // ✅ user null hua to bhi return
+      req.flash("success", "User not found, please login again");
+      return res.redirect("/login");  // ✅ user null hua to bhi return
     }
 
     req.user = user;
     next();  // ✅ login successful → aage route chalega
   } catch (err) {
-    req.flash("error", "Please login first");
-    return res.redirect("/");
+    req.flash("success", "Please login first");
+    return res.redirect("/login");
   }
 };

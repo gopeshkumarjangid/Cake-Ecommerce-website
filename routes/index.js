@@ -13,9 +13,12 @@ router.get('/shop', IsLoggedIn, async function (req, res) {
 
 // Cart page
 router.get("/cart", IsLoggedIn, async function (req, res) {
-    let user = await userModel.findOne({ email: req.user.email }).populate("cart");
-    res.render("cart", { products: user.cart });   // ✅ now cart.ejs can use products
+  let user = await userModel.findOne({ email: req.user.email }).populate("cart");
+  let success = req.flash("success");
+  let products = (user && user.cart) ? user.cart : [];
+  res.render("cart", { products,success });
 });
+
 
 
 // Add to cart
@@ -29,7 +32,7 @@ router.get('/addtocart/:productid', IsLoggedIn, async function (req, res) {
         res.redirect("/shop");   // ✅ redirect back to shop
     } catch (err) {
         console.log(err);
-        req.flash("error", "Something went wrong");
+        req.flash("success", "Something went wrong");
         res.redirect("/shop");
     }
 });
@@ -42,7 +45,7 @@ router.get("/removefromcart/:productid", IsLoggedIn, async function (req, res) {
         res.redirect("/cart");
     } catch (err) {
         console.log(err);
-        req.flash("error", "Could not remove item");
+        req.flash("success", "Could not remove item");
         res.redirect("/cart");
     }
 });
@@ -50,7 +53,7 @@ router.get("/removefromcart/:productid", IsLoggedIn, async function (req, res) {
 
 // Logout
 router.get("/logout", IsLoggedIn, async function (req, res) {
-    res.redirect("/products/shop");
+    res.redirect("/");
 });
 
 module.exports = router;

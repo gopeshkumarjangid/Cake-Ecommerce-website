@@ -8,6 +8,7 @@ const productRoute = require("./routes/productRoute");
 const ownerRoute = require("./routes/ownerRoute");
 const userRoute = require("./routes/userRoute");
 const index = require("./routes/index");
+const paymentRoute = require("./routes/paymentRoute");
 const expressSession = require("express-session");
 const flash = require("connect-flash");
 app.use(express.json());
@@ -27,14 +28,20 @@ app.use(
 app.use(flash());
 
 app.use('/owners',ownerRoute);
-app.use('/products',productRoute);
+app.use('/',productRoute);
 app.use('/users',userRoute);
 app.use("/",index);
-
-
-app.get("/", function(req,res){
-    res.redirect("/products/shop");
+app.use("/payment",paymentRoute);
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  next();
 });
 
 
-module.exports = app;
+app.get("/", function(req,res)
+{
+    res.redirect("/products");
+});
+
+
+app.listen(3000);

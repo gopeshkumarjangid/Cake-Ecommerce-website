@@ -13,32 +13,59 @@
 
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("-translate-x-full");
+            document.getElementById("overlay").classList.toggle("hidden");
         }
     </script>
 </head>
 
 <body class="bg-gradient-to-r from-pink-50 to-yellow-50 font-sans">
-    <% if (typeof success !== "undefined" && success.length > 0) { %>
-        <div class="absolute top-5 left-1/2 rounded-md bg-blue-500 text-white px-4 py-2 -translate-x-1/2">
+
+    <% if(success.length> 0){ %>
+        <div id="flashMessage"
+            class="absolute top-5 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white px-6 py-3 rounded-md shadow-lg transition-opacity duration-700 opacity-100">
             <%= success %>
         </div>
-    <% } %>
+
+        <script>
+            setTimeout(() => {
+                const flash = document.getElementById('flashMessage');
+                if (flash) {
+                    flash.classList.add('opacity-0');
+                    setTimeout(() => flash.remove(), 700);
+                }
+            }, 1000);
+        </script>
+        <% } %>
+
             <!-- Mobile Navbar -->
             <div
                 class="lg:hidden flex items-center justify-between p-4 bg-white shadow-md fixed top-0 left-0 right-0 z-50">
                 <h1 class="text-xl font-bold text-pink-600">Sweet Bites</h1>
                 <div class="flex items-center gap-3">
                     <a href="/cart" class="bg-pink-500 text-white px-3 py-1 rounded-lg hover:bg-pink-600">🛒 Cart</a>
-                    <button onclick="toggleSidebar()" class="p-2 rounded-md bg-pink-500 text-white">
-                        ☰
-                    </button>
+                    <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"
+                        class="p-2 rounded-md bg-pink-500 text-white">☰</button>
                 </div>
             </div>
+
+            <!-- Overlay (for mobile sidebar) -->
+            <div id="overlay"
+                class="hidden fixed inset-0 bg-black bg-opacity-40 z-40 lg:hidden transition-opacity duration-300"
+                onclick="toggleSidebar()"></div>
 
             <!-- Sidebar -->
             <aside id="sidebar"
                 class="w-64 bg-white shadow-lg p-6 flex flex-col justify-between fixed top-0 left-0 h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-50">
                 <div>
+                    <!-- Close button (mobile only) -->
+                    <div class="flex items-center justify-between mb-6 lg:hidden">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2769/2769603.png" alt="Cake Logo"
+                            class="w-10 h-10">
+                        <h1 class="text-2xl font-bold text-pink-600">Sweet Bites</h1>
+                        <button onclick="toggleSidebar()"
+                            class="text-gray-600 hover:text-red-500 text-2xl">&times;</button>
+                    </div>
+
                     <div class="hidden lg:flex items-center space-x-2 mb-6">
                         <img src="https://cdn-icons-png.flaticon.com/512/2769/2769603.png" alt="Cake Logo"
                             class="w-10 h-10">
@@ -72,8 +99,7 @@
                 </div>
 
                 <div>
-                    <a href="/users/logout"
-                        class="block text-center bg-red-500 text-white py-2 rounded-lg hover:bg-red-600">
+                    <a href="/" class="block text-center bg-red-500 text-white py-2 rounded-lg hover:bg-red-600">
                         Logout
                     </a>
                 </div>
@@ -100,8 +126,8 @@
                                 <div class="relative flex items-center justify-center h-35 bg-white">
                                     <% if (pct> 0) { %>
                                         <span
-                                            class="absolute top-2 left-2 text-xs font-semibold px-2 py-1 rounded-full bg-red-500 text-white">
-                                            -<%= pct %>%
+                                            class="absolute top-2 left-2 text-xs font-semibold px-2 py-1 rounded-full bg-red-500 text-white">-
+                                            <%= pct %>%
                                         </span>
                                         <% } %>
                                             <img src="<%= product.image %>" alt="<%= product.name %>"
@@ -117,23 +143,29 @@
                                         <div class="mt-1 flex items-baseline gap-2">
                                             <span class="text-xl font-bold text-pink-600">₹<%= discounted %></span>
                                             <span class="text-sm line-through text-gray-500">₹<%= product.price %>
-                                                    </span>
+                                            </span>
                                         </div>
                                         <% } else { %>
                                             <div class="mt-1">
                                                 <span class="text-xl font-bold text-pink-600">₹<%= product.price %>
-                                                        </span>
+                                                </span>
                                             </div>
                                             <% } %>
 
-                                                <!-- Only + Btn -->
                                                 <a href="/addtocart/<%= product._id %>">
+                                                    <!-- Mobile button (circle +) -->
                                                     <button
-                                                        class="hidden lg:block w-1/2 mt-1 h-7 flex items-center justify-center rounded-lg bg-pink-500 text-white text-sm transition">
+                                                        class="lg:hidden w-7 h-7 flex items-center justify-center rounded-full bg-pink-500 text-white text-base font-bold shadow-md">
+                                                        +
+                                                    </button>
+
+
+                                                    <!-- Desktop button (Add to cart) -->
+                                                    <button
+                                                        class="hidden lg:flex w-1/2 mt-1 h-7 items-center justify-center rounded-lg bg-pink-500 text-white text-sm transition hover:bg-pink-600">
                                                         + Add to cart
                                                     </button>
                                                 </a>
-
 
                                 </div>
                             </div>

@@ -4,12 +4,15 @@ const {registerUser} = require("../controller/authController");
 const {loginUser} = require("../controller/authController");
 const {IsLoggedIn} = require("../middleware/IsLoggedIn");
 const {Logout} = require("../controller/authController");
-router.get('/', function (req, res) {
-    res.send("hey");
+const flash = require("connect-flash");
+
+router.get('/verification', function (req, res) {
+let success = req.flash("success");
+    res.render("index",{success});
 });
 router.post('/register', registerUser);
 router.post("/login",loginUser);
-router.get("/logout",Logout);
+router.post("/logout",Logout);
 
 
 module.exports = router;
